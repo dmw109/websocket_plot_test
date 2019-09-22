@@ -1,0 +1,9 @@
+{
+	"name": "Websocket Plot Test",
+	"version": "0.0.1",
+	"description": "Testing real time plotting in the browser with websockets",
+	"dependencies": {
+		"express": "^4.15.2",
+		"socket.io": "^2.3.0"
+	}
+}

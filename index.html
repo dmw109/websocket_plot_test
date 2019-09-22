@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Socket.IO Plot</title>
+	</head>
+	<style>
+	</style>
+	<body>
+		<div id="plot"></div>
+		<form action="">
+			<button>Stop</button>
+		</form>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+		<script>
+			var trace1 = {
+			  x: [],
+			  y: [],
+			  mode: 'line'
+			};
+
+			var data = [ trace1 ];
+
+			var layout = {
+			  title:'Chart'
+			};
+			
+			var isPlotting = true;
+
+			$(function() {
+				var socket = io();
+
+				$('form').submit(function(e){
+					e.preventDefault();
+					isPlotting = !isPlotting;
+					$('button').text(isPlotting ? 'Stop' : 'Start');
+				});
+
+				socket.on('chat message', function(msg){
+					data[0].x = msg.x;
+					data[0].y = msg.y;
+					console.log(msg);
+					if (isPlotting) {
+						Plotly.newPlot('plot', data, layout);
+					}
+				});
+			});
+		</script>
+	</body>
+</html>
