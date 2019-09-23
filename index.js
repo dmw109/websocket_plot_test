@@ -1,5 +1,17 @@
-var app = require('express')();
-var http = require('http').createServer(app);
+var fs = require('fs');
+var http = require('http').createServer(function (req, res) {
+  fs.readFile(__dirname + '/index.html',
+  function (err, data) {
+    if (err) {
+      res.writeHead(500);
+      return res.end('Error loading index.html');
+    }
+
+    res.writeHead(200);
+    res.end(data);
+  });
+});
+
 var io = require('socket.io')(http);
 var y_data = [];
 y_data.length = 200;
@@ -9,11 +21,6 @@ var t = 0
 var x_data = [];
 x_data.length = 200;
 x_data.fill(0);
-
-
-app.get('/', function (req, res) {
-	res.sendFile(__dirname + '/index.html');
-});
 
 io.on('connection', function(socket){
 	console.log('a user connected');
