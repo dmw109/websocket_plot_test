@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Socket.IO Plot</title>
+	</head>
+	<style>
+	</style>
+	<body>
+		<div id="plot" style="width: 900px; height: 500px"></div>
+		<form action="">
+			<button>Stop</button>
+		</form>
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+		<script>
+			google.charts.load('current', {'packages':["corechart"]});
+			google.charts.setOnLoadCallback(drawChart);
+
+			// On document ready
+			function drawChart() {
+				$(function() {
+					var data = new google.visualization.DataTable();
+					data.addColumn('number', 'x');
+					data.addColumn('number', 'y');
+					data.addRows(200);
+
+					var options = {
+							  title: 'Chart',
+							  curveType: 'function',
+							  legend: { position: 'bottom' }
+							};
+
+					var chart = new google.visualization.LineChart(document.getElementById('plot'));
+					var isPlotting = true;
+
+					var socket = io();
+
+					$('form').submit(function(e){
+						e.preventDefault();
+						isPlotting = !isPlotting;
+						$('button').text(isPlotting ? 'Stop' : 'Start');
+					});
+
+					socket.on('chat message', function(msg){
+						for (let i=0; i<200; i++) {
+							data.setValue(i,0, msg.x[i]);
+							data.setValue(i,1, msg.y[i]);
+						}	
+
+					//	console.log(msg);
+						if (isPlotting) {
+							chart.draw(data, null);
+						}
+					});
+				});
+			}
+		</script>
+	</body>
+</html>
