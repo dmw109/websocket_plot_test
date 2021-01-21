@@ -3,6 +3,6 @@
 	"version": "0.0.1",
 	"description": "Testing real time plotting in the browser with websockets",
 	"dependencies": {
-		"socket.io": "^2.3.0"
+		"socket.io": "^2.4.0"
 	}
 }
